@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia, JWTSubject
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'mobile',
@@ -21,6 +24,21 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('user-profile')->singleFile();
+    }
 
     public function posts(): HasMany
     {

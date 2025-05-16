@@ -9,7 +9,7 @@ class UserFactory extends Factory
 {
     public function definition(): array
     {
-        $password = fake()->numerify('091########');
+        $password = fake()->numerify('09#########');
         return [
             'mobile' => $password,
             'password' => Hash::make($password),

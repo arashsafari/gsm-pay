@@ -1,0 +1,50 @@
+services:
+    gsm-pay-app:
+        build:
+            context: deploy
+            dockerfile: Dockerfile
+        image: gsm-pay-app
+        container_name: gsm-pay-app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+        networks:
+            - gsm-pay-app-network
+
+    webserver:
+        image: nginx:alpine
+        container_name: webserver
+        restart: unless-stopped
+        ports:
+            - "8088:80"
+        volumes:
+            - ./:/var/www
+            - ./deploy/nginx/conf.d:/etc/nginx/conf.d
+        depends_on:
+            - gsm-pay-app
+        networks:
+            - gsm-pay-app-network
+
+    gsm-pay-db:
+        image: mysql:8.0
+        container_name: gsm-pay-db
+        restart: unless-stopped
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_DATABASE: gsm-pay
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_PASSWORD: root
+        volumes:
+            - dbdata:/var/lib/mysql
+        networks:
+            - gsm-pay-app-network
+
+networks:
+    gsm-pay-app-network:
+        driver: bridge
+
+volumes:
+    dbdata:
+        driver: local

@@ -1,0 +1,548 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GSM Pay",
+        "description": "API documentation",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User Login",
+                "operationId": "f04ab66eb175773313810c7074507783",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mobile",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "mobile": {
+                                        "type": "string",
+                                        "example": "09121234567"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "yourPassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "results": {
+                                                    "properties": {
+                                                        "access_token": {
+                                                            "type": "string",
+                                                            "example": "eyJ0e..."
+                                                        },
+                                                        "token_type": {
+                                                            "type": "string",
+                                                            "example": "bearer"
+                                                        },
+                                                        "expires_in": {
+                                                            "type": "integer",
+                                                            "example": 3600
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "error_message": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "server_time": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-05-16T13:51:00+03:30"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "results": {
+                                                    "type": "object",
+                                                    "example": []
+                                                },
+                                                "error_message": {
+                                                    "type": "string",
+                                                    "example": "Invalid credentials."
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "server_time": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-05-16T13:51:00+03:30"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "mobile": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The mobile field is required."
+                                                    }
+                                                },
+                                                "password": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The password field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/posts": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get paginated list of posts",
+                "operationId": "af99f5d8bef76de9a86aaaf3def8f083",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of posts per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "results": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Post"
+                                                    }
+                                                },
+                                                "links": {
+                                                    "type": "object"
+                                                },
+                                                "meta": {
+                                                    "type": "object"
+                                                },
+                                                "error_message": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "server_time": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/posts/{id}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get a single post by ID",
+                "operationId": "d900c81613e5b5226ce891ea96792dfd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Post ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "results": {
+                                                    "$ref": "#/components/schemas/Post"
+                                                },
+                                                "error_message": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "server_time": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Post not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "results": {
+                                                    "type": "object"
+                                                },
+                                                "error_message": {
+                                                    "type": "string",
+                                                    "example": "Not found"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "server_time": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/upload-profile-image": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Upload user profile image",
+                "operationId": "cda1d3f58b62604fd84b1883bd8cd7af",
+                "requestBody": {
+                    "description": "Image file to upload",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "image"
+                                ],
+                                "properties": {
+                                    "image": {
+                                        "description": "Image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile image uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "server_time": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found or upload error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "results": {
+                                                    "type": "object"
+                                                },
+                                                "error_message": {
+                                                    "type": "string",
+                                                    "example": "User not found"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "server_time": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users/most-viewed-posts": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get users ranked by total post views",
+                "operationId": "5d91867f11d8f4f4e8ebb80b4a9884e3",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "results": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/UserMostViewedPosts"
+                                                    }
+                                                },
+                                                "links": {
+                                                    "type": "object"
+                                                },
+                                                "meta": {
+                                                    "type": "object"
+                                                },
+                                                "error_message": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "server_time": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Post": {
+                "title": "Post",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Sample Post Title"
+                    },
+                    "body": {
+                        "type": "string",
+                        "example": "This is the body of the post."
+                    },
+                    "view_count": {
+                        "type": "integer",
+                        "example": 42
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "mobile": {
+                        "type": "string",
+                        "example": "09123456789"
+                    },
+                    "profile_image": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Media"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "Media": {
+                "title": "Media",
+                "properties": {
+                    "mime_type": {
+                        "type": "string",
+                        "example": "image/jpeg"
+                    },
+                    "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://example.com/media/profile.jpg"
+                    }
+                },
+                "type": "object"
+            },
+            "UserMostViewedPosts": {
+                "title": "UserMostViewedPosts",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "mobile": {
+                        "type": "string",
+                        "example": "09123456789"
+                    },
+                    "total_post_views": {
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "profile_image": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Media"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Posts",
+            "description": "Posts"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
+        }
+    ]
+}

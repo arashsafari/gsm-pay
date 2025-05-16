@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->index('index', 'posts_view_count');
+            $table->index('view_count', 'posts_view_count');
         });
     }
 
