@@ -1,17 +1,24 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\Controller\Auth;
 
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Redis::flushDB();
+    }
 
     #[Test]
     public function shouldLoginSuccessfully(): void

@@ -11,6 +11,7 @@ interface PostControllerDocsInteface
      *     path="/api/posts",
      *     summary="Get paginated list of posts",
      *     tags={"Posts"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
@@ -49,6 +50,7 @@ interface PostControllerDocsInteface
      *     path="/api/posts/{id}",
      *     summary="Get a single post by ID",
      *     tags={"Posts"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

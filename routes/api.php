@@ -31,4 +31,5 @@ Route::prefix('users/')
 
 Route::prefix('posts/')
     ->name('posts.')
+    ->middleware('auth:api')
     ->group(__DIR__ . '/post/routes.php');

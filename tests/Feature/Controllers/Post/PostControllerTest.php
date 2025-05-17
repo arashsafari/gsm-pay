@@ -1,18 +1,29 @@
 <?php
 
-namespace Tests\Feature\Post;
+namespace Tests\Feature\Controller\Post;
 
 use App\Models\Post;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PostControllerTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Redis::flushDB();
+
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
+    }
 
     #[Test]
     public function shouldReturnAllPostWithPagination(): void
@@ -47,7 +58,7 @@ class PostControllerTest extends TestCase
                     'results' => [
                         'title' => $post->title,
                         'body' => $post->body,
-                        'view_count' => 1,
+                        'view_count' => 0,
                         'user' => [
                             'id' => $user->id,
                             'mobile' => $user->mobile,
@@ -57,6 +68,10 @@ class PostControllerTest extends TestCase
                 ],
                 'server_time' => Carbon::now()->toIso8601String()
             ]);
+
+        $ip = request()->ip();
+        $this->assertEquals(1, (int)Redis::get("post:$post->id:views"));
+        $this->assertEquals(1, (int)Redis::get("post:$post->id:views:ip:$ip"));
     }
 
     #[Test]
@@ -67,13 +82,9 @@ class PostControllerTest extends TestCase
             'view_count' => 1,
         ]);
 
-        $cacheKey = sprintf(
-            '%s_view_count_%d_%s',
-            $post->getMorphClass(),
-            $post->getKey(),
-            request()->ip()
-        );
-        Cache::set($cacheKey, true);
+        $ip = request()->ip();
+        Redis::incr("post:$post->id:views");
+        Redis::setex("post:$post->id:views:ip:$ip", 86400, 1);
 
         $response = $this->getJson(route('posts.show', $post->id));
 

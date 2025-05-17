@@ -44,3 +44,14 @@ $ http://localhost:8088/api/documentation
 $ php artisan test or composer test
 
 ```
+
+## Update view count
+
+```
+
+$ php artisan schedule:run
+
+```
+
+you can find users in api /api/users/most-viewed-posts and login by any user you want password equals to mobile 
+

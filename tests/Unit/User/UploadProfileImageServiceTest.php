@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Mockery as M;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Illuminate\Contracts\Config\Repository as Config;
 use Spatie\MediaLibrary\MediaCollections\FileAdder;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Tests\UnitTestCase;
 
-class UploadProfileImageServiceTest extends TestCase
+class UploadProfileImageServiceTest extends UnitTestCase
 {
     private UploadProfileImageService $sut;
 

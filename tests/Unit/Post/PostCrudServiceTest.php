@@ -4,24 +4,21 @@ namespace Tests\Unit\Post;
 
 use App\Models\Post;
 use App\Repositories\Contracts\PostRepositoryInterface;
-use App\Services\Auth\Exceptions\LoginException;
-use App\Services\Auth\LoginService;
 use App\Services\Post\PostCrudService;
-use App\Services\ViewCount\Contracts\ViewCountInterface;
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use App\Services\ViewCount\Increment\Contracts\IncrementCountInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Mockery as M;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\UnitTestCase;
 
-class PostCrudServiceTest extends TestCase
+class PostCrudServiceTest extends UnitTestCase
 {
     private PostCrudService $sut;
 
     private PostRepositoryInterface|(M\MockInterface&M\LegacyMockInterface) $postRepositoryMock;
 
-    private ViewCountInterface|(M\MockInterface&M\LegacyMockInterface) $viewCountMock;
+    private IncrementCountInterface|(M\MockInterface&M\LegacyMockInterface) $incrementCountInterfaceMock;
 
     private LengthAwarePaginator|(M\MockInterface&M\LegacyMockInterface) $lengthAwarePaginatorMock;
 
@@ -31,11 +28,11 @@ class PostCrudServiceTest extends TestCase
     {
         parent::setUp();
         $this->postRepositoryMock = M::mock(PostRepositoryInterface::class);
-        $this->viewCountMock = M::mock(ViewCountInterface::class);
+        $this->incrementCountInterfaceMock = M::mock(IncrementCountInterface::class);
         $this->lengthAwarePaginatorMock = M::mock(LengthAwarePaginator::class);
         $this->postMock = M::mock(Post::class);
 
-        $this->sut = new PostCrudService($this->postRepositoryMock, $this->viewCountMock);
+        $this->sut = new PostCrudService($this->postRepositoryMock, $this->incrementCountInterfaceMock);
     }
 
     #[Test]
@@ -57,8 +54,8 @@ class PostCrudServiceTest extends TestCase
             ->expects('findOrFail')
             ->andReturn($this->postMock);
 
-        $this->viewCountMock
-            ->expects('incrementViewCount')
+        $this->incrementCountInterfaceMock
+            ->expects('run')
             ->andReturnNull();
 
         $result = $this->sut->findPostAndUpdateView(1);

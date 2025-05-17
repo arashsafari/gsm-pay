@@ -41,6 +41,20 @@ services:
         networks:
             - gsm-pay-app-network
 
+    redis:
+        image: redis:7-alpine
+        container_name: redis
+        restart: unless-stopped
+        ports:
+            - "6379:6379"
+        networks:
+            - gsm-pay-app-network
+        healthcheck:
+            test: [ "CMD", "redis-cli", "ping" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+
 networks:
     gsm-pay-app-network:
         driver: bridge

@@ -5,7 +5,7 @@ namespace App\Services\Post;
 use App\Models\Post;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use App\Services\Post\Contracts\PostCrudServiceInterface;
-use App\Services\ViewCount\Contracts\ViewCountInterface;
+use App\Services\ViewCount\Increment\Contracts\IncrementCountInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -13,7 +13,7 @@ class PostCrudService implements PostCrudServiceInterface
 {
     public function __construct(
         private readonly PostRepositoryInterface $postRepository,
-        private readonly ViewCountInterface      $viewCountService,
+        private readonly IncrementCountInterface $incrementCount,
     )
     {
     }
@@ -34,7 +34,7 @@ class PostCrudService implements PostCrudServiceInterface
             id: $id,
             columns: ['id', 'title', 'body', 'view_count', 'user_id'],
         );
-        $this->viewCountService->incrementViewCount($post);
+        $this->incrementCount->run($post);
 
         return $post;
     }

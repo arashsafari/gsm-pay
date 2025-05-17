@@ -1,16 +1,23 @@
 <?php
 
-namespace Tests\Feature\User;
+namespace Tests\Feature\Controller\User;
 
 use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Redis;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class UserMostViewedPostsControllerTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Redis::flushDB();
+    }
 
     #[Test]
     public function shouldReturnAllUserSortByPostViewCount(): void

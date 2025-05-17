@@ -55,6 +55,6 @@ use Illuminate\Http\JsonResponse;
  *      bearerFormat="JWT"
  *  )
  */
-interface SharedDocsInteface
+interface SharedDocsInterface
 {
 }

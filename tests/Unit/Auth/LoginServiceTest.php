@@ -6,10 +6,10 @@ use App\Services\Auth\Exceptions\LoginException;
 use App\Services\Auth\LoginService;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Mockery as M;
+use Tests\UnitTestCase;
 
-class LoginServiceTest extends TestCase
+class LoginServiceTest extends UnitTestCase
 {
     private LoginService $sut;
 

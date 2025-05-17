@@ -17,7 +17,7 @@ interface LoginControllerDocsInteface
      *         @OA\JsonContent(
      *             required={"mobile","password"},
      *             @OA\Property(property="mobile", type="string", example="09121234567"),
-     *             @OA\Property(property="password", type="string", example="yourPassword123")
+     *             @OA\Property(property="password", type="string", example="09121234567")
      *         )
      *     ),
      *     @OA\Response(

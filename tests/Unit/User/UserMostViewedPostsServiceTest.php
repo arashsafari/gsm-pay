@@ -7,9 +7,9 @@ use App\Services\User\UserMostViewedPostsService;
 use Illuminate\Database\Eloquent\Collection;
 use Mockery as M;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\UnitTestCase;
 
-class UserMostViewedPostsServiceTest extends TestCase
+class UserMostViewedPostsServiceTest extends UnitTestCase
 {
     private UserMostViewedPostsService $sut;
 
