@@ -3,13 +3,13 @@
 ```
 $ docker compose up -d --build
 
-$ sudo docker compose exec gsm-pay-app bash
+$ docker compose exec gsm-pay-app bash
 
 $ cp .env.example .env
 
-$ `cp .env.test.example .env.test`
+$ cp .env.test.example .env.test
 
-$ composer install or composer install --ignore-platform-req=ext-exif
+$ composer install --ignore-platform-req=ext-exif
 
 $ php artisan key:generate
 
